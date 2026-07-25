@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>INFINITE RESTAURANT</title>
+
+<style>
+body{
+    font-family:Arial, sans-serif;
+    background:#f2f2f2;
+}
+
+h1{
+    text-align:center;
+    color:darkred;
+}
+
+.menu{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+}
+
+.card{
+    width:220px;
+    background:white;
+    padding:10px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 0 10px gray;
+}
+
+img{
+    width:180px;
+    height:140px;
+    border-radius:10px;
+}
+
+button{
+    background:green;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:darkgreen;
+}
+
+#cart{
+    margin:30px;
+    padding:20px;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 0 10px gray;
+}
+</style>
+
+<script>
+let total = 0;
+
+function addToCart(item, price){
+    let list = document.getElementById("items");
+
+    let li = document.createElement("li");
+    li.innerHTML = item + " - ₹" + price;
+    list.appendChild(li);
+
+    total += price;
+    document.getElementById("total").innerHTML = "₹" + total;
+}
+</script>
+
+</head>
+
+<body>
+
+<h1>🍽️ A S RESTAURANT 🍽️</h1>
+
+<div class="menu">
+
+<div class="card">
+<img src="Images/freshjuice.jpg">
+<h3>Fresh Juice</h3>
+<p>₹80</p>
+<button onclick="addToCart('Fresh Juice',80)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/frenchfries.jpg">
+<h3>French Fries</h3>
+<p>₹120</p>
+<button onclick="addToCart('French Fries',120)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/Friedrice.jpeg">
+<h3>Fried Rice</h3>
+<p>₹180</p>
+<button onclick="addToCart('Fried Rice',180)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/ChickenPasta.jpg">
+<h3>Chicken Pasta</h3>
+<p>₹220</p>
+<button onclick="addToCart('Chicken Pasta',220)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/vegsandwich.jpg">
+<h3>Veg Sandwich</h3>
+<p>₹100</p>
+<button onclick="addToCart('Veg Sandwich',100)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/chocolatemilkshake.jpg">
+<h3>Chocolate Milkshake</h3>
+<p>₹150</p>
+<button onclick="addToCart('Chocolate Milkshake',150)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/coldcoffee.jpg">
+<h3>Cold Coffee</h3>
+<p>₹120</p>
+<button onclick="addToCart('Cold Coffee',120)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/vanillaicecream.jpg">
+<h3>Vanilla Ice Cream</h3>
+<p>₹90</p>
+<button onclick="addToCart('Vanilla Ice Cream',90)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/chicken65.jpg">
+<h3>Chicken 65</h3>
+<p>₹250</p>
+<button onclick="addToCart('Chicken 65',250)">Add to Cart</button>
+</div>
+
+<div class="card">
+<img src="Images/HakkaNoodles.jpg">
+<h3>Hakka Noodles</h3>
+<p>₹190</p>
+<button onclick="addToCart('Hakka Noodles',190)">Add to Cart</button>
+</div>
+
+</div>
+
+<div id="cart">
+<h2>🛒 Cart</h2>
+<ul id="items"></ul>
+<h3>Total: <span id="total">₹0</span></h3>
+</div>
+
+</body>
+</html>
