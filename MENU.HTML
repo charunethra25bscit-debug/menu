@@ -4,72 +4,241 @@
 <title>INFINITE RESTAURANT</title>
 
 <style>
-body{
-    font-family:Arial, sans-serif;
-    background:#f2f2f2;
+body {
+    font-family: Arial, sans-serif;
+    /* Dark premium overlay with a fallback cooking background pattern */
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://unsplash.com') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 20px;
 }
 
-h1{
-    text-align:center;
-    color:darkred;
+h1 {
+    text-align: center;
+    color: #ffb703;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    font-size: 2.6rem;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
 }
 
-.menu{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:20px;
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.card{
-    width:220px;
-    background:white;
-    padding:10px;
-    border-radius:10px;
-    text-align:center;
-    box-shadow:0 0 10px gray;
+.card {
+    width: 220px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-img{
-    width:180px;
-    height:140px;
-    border-radius:10px;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(255, 183, 3, 0.4);
 }
 
-button{
-    background:green;
-    color:white;
-    border:none;
-    padding:10px;
-    border-radius:5px;
-    cursor:pointer;
+img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    background-color: #eee;
 }
 
-button:hover{
-    background:darkgreen;
+h3 {
+    color: #222;
+    margin: 12px 0 6px 0;
+    font-size: 1.2rem;
 }
 
-#cart{
-    margin:30px;
-    padding:20px;
-    background:white;
-    border-radius:10px;
-    box-shadow:0 0 10px gray;
+p {
+    color: #d90429;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 5px 0 12px 0;
+}
+
+.add-btn {
+    background: #2b9348;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+}
+
+.add-btn:hover {
+    background: #1b4332;
+}
+
+/* Beautiful Centered Dynamic Checkout Module */
+#cart {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+    color: #333;
+}
+
+#cart h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    color: #111;
+    display: flex;
+    justify-content: space-between;
+}
+
+#items {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.item-name-qty {
+    font-weight: bold;
+    color: #222;
+}
+
+.item-total-price {
+    margin-right: 15px;
+    color: #555;
+}
+
+.remove-btn {
+    background: #e63946;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.remove-btn:hover {
+    background: #b7094c;
+}
+
+.total-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 15px 0;
+    padding-top: 15px;
+    border-top: 2px dashed #ccc;
+}
+
+.total-section h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #111;
+}
+
+#total {
+    color: #2b9348;
+}
+
+.checkout-btn {
+    background: #0077b6;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    font-size: 1.1rem;
+    transition: background 0.2s;
+}
+
+.checkout-btn:hover {
+    background: #03045e;
 }
 </style>
 
 <script>
-let total = 0;
+// Array tracker to bundle food combinations smoothly
+let cart = [];
 
-function addToCart(item, price){
+function addToCart(itemName, price) {
+    let existingItem = cart.find(item => item.name === itemName);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ name: itemName, price: price, quantity: 1 });
+    }
+    
+    renderCart();
+}
+
+function removeFromCart(itemName) {
+    cart = cart.filter(item => item.name !== itemName);
+    renderCart();
+}
+
+function renderCart() {
     let list = document.getElementById("items");
+    list.innerHTML = ""; 
+    let total = 0;
 
-    let li = document.createElement("li");
-    li.innerHTML = item + " - ₹" + price;
-    list.appendChild(li);
+    if (cart.length === 0) {
+        list.innerHTML = "<li style='color: #777; text-align: center; padding: 15px 0;'>Your basket is empty</li>";
+        document.getElementById("total").innerHTML = "₹0";
+        return;
+    }
 
-    total += price;
+    cart.forEach(item => {
+        let itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        let li = document.createElement("li");
+        li.className = "cart-item";
+        li.innerHTML = `
+            <span class="item-name-qty">${item.name} <span style="color: #666;">(x${item.quantity})</span></span>
+            <div>
+                <span class="item-total-price">₹${itemTotal}</span>
+                <button class="remove-btn" onclick="removeFromCart('${item.name}')">Remove</button>
+            </div>
+        `;
+        list.appendChild(li);
+    });
+
     document.getElementById("total").innerHTML = "₹" + total;
+}
+
+function checkout() {
+    if (cart.length === 0) {
+        alert("Your cart is empty! Please add some dishes first.");
+        return;
+    }
+    alert("Order Confirmed! Your total bill value is " + document.getElementById("total").innerText + ". The kitchen has started preparing your food.");
+    cart = [];
+    renderCart();
 }
 </script>
 
@@ -81,82 +250,99 @@ function addToCart(item, price){
 
 <div class="menu">
 
+<!-- Card 1 -->
 <div class="card">
-<img src="Images/freshjuice.jpg">
+<img src="Images/freshjuice.jpg" onerror="this.src='https://unsplash.com'" alt="Fresh Juice">
 <h3>Fresh Juice</h3>
 <p>₹80</p>
-<button onclick="addToCart('Fresh Juice',80)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Fresh Juice',80)">Add to Cart</button>
 </div>
 
+<!-- Card 2 -->
 <div class="card">
-<img src="Images/frenchfries.jpg">
+<img src="Images/frenchfries.jpg" onerror="this.src='https://unsplash.com'" alt="French Fries">
 <h3>French Fries</h3>
 <p>₹120</p>
-<button onclick="addToCart('French Fries',120)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('French Fries',120)">Add to Cart</button>
 </div>
 
+<!-- Card 3 -->
 <div class="card">
-<img src="Images/Friedrice.jpeg">
+<img src="Images/Friedrice.jpeg" onerror="this.src='https://unsplash.com'" alt="Fried Rice">
 <h3>Fried Rice</h3>
 <p>₹180</p>
-<button onclick="addToCart('Fried Rice',180)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Fried Rice',180)">Add to Cart</button>
 </div>
 
+<!-- Card 4 -->
 <div class="card">
-<img src="Images/ChickenPasta.jpg">
+<img src="Images/ChickenPasta.jpg" onerror="this.src='https://unsplash.com'" alt="Chicken Pasta">
 <h3>Chicken Pasta</h3>
 <p>₹220</p>
-<button onclick="addToCart('Chicken Pasta',220)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Chicken Pasta',220)">Add to Cart</button>
 </div>
 
+<!-- Card 5 -->
 <div class="card">
-<img src="Images/vegsandwich.jpg">
+<img src="Images/vegsandwich.jpg" onerror="this.src='https://unsplash.com'" alt="Veg Sandwich">
 <h3>Veg Sandwich</h3>
 <p>₹100</p>
-<button onclick="addToCart('Veg Sandwich',100)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Veg Sandwich',100)">Add to Cart</button>
 </div>
 
+<!-- Card 6 -->
 <div class="card">
-<img src="Images/chocolatemilkshake.jpg">
+<img src="Images/chocolatemilkshake.jpg" onerror="this.src='https://unsplash.com'" alt="Chocolate Milkshake">
 <h3>Chocolate Milkshake</h3>
 <p>₹150</p>
-<button onclick="addToCart('Chocolate Milkshake',150)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Chocolate Milkshake',150)">Add to Cart</button>
 </div>
 
+<!-- Card 7 -->
 <div class="card">
-<img src="Images/coldcoffee.jpg">
+<img src="Images/coldcoffee.jpg" onerror="this.src='https://unsplash.com'" alt="Cold Coffee">
 <h3>Cold Coffee</h3>
 <p>₹120</p>
-<button onclick="addToCart('Cold Coffee',120)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Cold Coffee',120)">Add to Cart</button>
 </div>
 
+<!-- Card 8 -->
 <div class="card">
-<img src="Images/vanillaicecream.jpg">
+<img src="Images/vanillaicecream.jpg" onerror="this.src='https://unsplash.com'" alt="Vanilla Ice Cream">
 <h3>Vanilla Ice Cream</h3>
 <p>₹90</p>
-<button onclick="addToCart('Vanilla Ice Cream',90)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Vanilla Ice Cream',90)">Add to Cart</button>
 </div>
 
+<!-- Card 9 -->
 <div class="card">
-<img src="Images/chicken65.jpg">
+<img src="Images/chicken65.jpg" onerror="this.src='https://unsplash.com'" alt="Chicken 65">
 <h3>Chicken 65</h3>
 <p>₹250</p>
-<button onclick="addToCart('Chicken 65',250)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Chicken 65',250)">Add to Cart</button>
 </div>
 
+<!-- Card 10 -->
 <div class="card">
-<img src="Images/HakkaNoodles.jpg">
+<img src="Images/HakkaNoodles.jpg" onerror="this.src='https://unsplash.com'" alt="Hakka Noodles">
 <h3>Hakka Noodles</h3>
 <p>₹190</p>
-<button onclick="addToCart('Hakka Noodles',190)">Add to Cart</button>
+<button class="add-btn" onclick="addToCart('Hakka Noodles',190)">Add to Cart</button>
 </div>
 
 </div>
 
+<!-- Interactive Live Checkout Cart Container -->
 <div id="cart">
-<h2>🛒 Cart</h2>
-<ul id="items"></ul>
-<h3>Total: <span id="total">₹0</span></h3>
+<h2>🛒 Your Basket</h2>
+<ul id="items">
+    <li style="color: #777; text-align: center; padding: 15px 0;">Your basket is empty</li>
+</ul>
+<div class="total-section">
+    <h3>Total Amount:</h3>
+    <h3><span id="total">₹0</span></h3>
+</div>
+<button class="checkout-btn" onclick="checkout()">Place Order</button>
 </div>
 
 </body>
